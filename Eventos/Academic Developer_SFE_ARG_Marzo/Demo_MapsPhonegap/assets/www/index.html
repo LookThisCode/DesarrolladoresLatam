@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta name="viewport" content="width=screen.width; user-scalable=no" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <title>jQuery Google Maps Plugin</title>
+    	<link rel="stylesheet" href="jquery.mobile/jquery.mobile-1.0.1.css" type="text/css">
+      <link rel="stylesheet" href="mapapp.css" type="text/css">
+      
+      <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+   
+   <script type="text/javascript" src="jquery.mobile/jquery-1.6.4.min"></script>
+   <script type="text/javascript" src="jquery.mobile/jquery.mobile-1.0.1.js"></script>
+   
+   	<script type="text/javascript" src="jquery.ui.map/jquery.ui.map.js"></script>
+ 	<script type="text/javascript" src="jquery.ui.map/jquery.ui.map.services.js"></script>
+ 	
+	
+	
+	<script type="text/javascript" charset="utf-8" src="mapapp.js"></script>
+
+	</head>
+  <body>
+	<div data-role="page" data-theme="c" id="page-home">
+	<div data-role="header" data-theme="d" data-nobackbtn="true">
+	<h1>App de ejemplo</h1>
+	</div>
+	<h1 style="text-align:center;color:#49b;">Gayali</h1>
+	<div data-role="content" id="contenthome">
+
+		<div class="ui-grid-a">
+		<div class="ui-block-a"><div id="map_square"></div></div>
+		<div class="ui-block-b"><p><strong>Pulse sobre el mapa para ver la direccion y la ruta para llegar al lugar.</strong></p></div>
+		</div><!-- /grid-a -->
+					
+		<p>El texto y los botones son a modo de ejemplo de una aplicacion web que muestra como llegar a un lugar<br><p>
+		<div data-role="controlgroup" data-theme="a" data-type="horizontal">
+			<a href="#page-map" data-role=button data-icon="info">Info</a>
+			<a href="#page-map" data-role=button data-icon="star">Mapa</a>
+			<a href="#page-map" data-role=button data-icon="grid">Productos</a>
+		</div>
+	</div><!-- /content -->
+
+	<div data-role="footer" data-position="fixed">
+		<h5>Mapas creados con Google Maps y<br><a href="http://code.google.com/p/jquery-ui-map/">jQuery Google Maps Plugin</a></h5>
+	</div><!-- /footer -->	
+	</div><!-- /page-home -->
+
+	<div data-role="page" data-theme="c" data-fullscreen="true" id="page-map">
+
+	<div data-role="content" id="map-content">
+		<div id="map_canvas"></div>
+	</div><!-- /content -->
+	
+	<div data-role="footer" data-theme="d" data-position="fixed">
+	<div data-role="navbar">
+	<ul>
+    	<li><a href="#page-home">Home</a></li>
+    	<li><a href="#page-map" class="refresh">Refrescar</a></li>
+    	<li><a href="#page-dir">Direcciones</a></li>
+	</ul>
+	</div><!-- /navbar -->
+	</div><!-- /footer -->
+	</div><!-- /page-map -->
+
+	<div data-role="page" data-theme="c" data-fullscreen="true" id="page-dir">
+
+	<div data-role="content">
+		<div id="dir_panel"></div>
+	</div><!-- /content -->
+
+	<div data-role="footer" data-theme="d" data-position="fixed">
+	<div data-role="navbar">
+		<ul>
+    	<li><a href="#page-home">Home</a></li>
+    	<li><a href="#page-map">Mapa</a></li>
+		</ul>
+	</div><!-- /navbar -->
+	</div><!-- /footer -->
+	</div><!-- /page-dir -->
+
+  </body>
+</html>
