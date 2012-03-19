@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	version="2.5">
+
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+	<!-- USER -->
+	<servlet>
+		<servlet-name>userService</servlet-name>
+		<servlet-class>org.gtugs.bsas.apidemo.UserServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>userService</servlet-name>
+		<url-pattern>/userInfo</url-pattern>
+	</servlet-mapping>
+	<!-- /USER -->
+	<!-- MAIL -->
+	<servlet>
+		<servlet-name>mailReceiver</servlet-name>
+		<servlet-class>org.gtugs.bsas.apidemo.MailRecieveServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>mailReceiver</servlet-name>
+		<url-pattern>/_ah/mail/*</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>mailSender</servlet-name>
+		<servlet-class>org.gtugs.bsas.apidemo.MailSendServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>mailSender</servlet-name>
+		<url-pattern>/sendmail</url-pattern>
+	</servlet-mapping>
+	<!-- /MAIL -->
+
+	<!-- XMPP -->
+	<servlet>
+		<servlet-name>xmppReceiver</servlet-name>
+		<servlet-class>org.gtugs.bsas.apidemo.ChatRecieveServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>xmppReceiver</servlet-name>
+		<url-pattern>/_ah/xmpp/message/chat/</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>xmppStatus</servlet-name>
+		<servlet-class>org.gtugs.bsas.apidemo.ChatStatusServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>xmppStatus</servlet-name>
+		<url-pattern>/_ah/xmpp/presence/unavailable/</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>xmppStatus</servlet-name>
+		<url-pattern>/_ah/xmpp/presence/available/</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>xmppSender</servlet-name>
+		<url-pattern>/sendchat</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>xmppSender</servlet-name>
+		<servlet-class>org.gtugs.bsas.apidemo.ChatSendServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>xmppInvite</servlet-name>
+		<url-pattern>/invitechat</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>xmppInvite</servlet-name>
+		<servlet-class>org.gtugs.bsas.apidemo.InviteChatServlet</servlet-class>
+	</servlet>
+	<!-- XMPP -->
+
+	<!-- Queues -->
+	<servlet>
+		<servlet-name>queueProducer</servlet-name>
+		<servlet-class>org.gtugs.bsas.apidemo.QueueProducerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>queueProducer</servlet-name>
+		<url-pattern>/queueTask</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>queueConsumer</servlet-name>
+		<servlet-class>org.gtugs.bsas.apidemo.QueueConsumerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>queueConsumer</servlet-name>
+		<url-pattern>/_ah/queue/default</url-pattern>
+	</servlet-mapping>
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>queueConsumer</web-resource-name>
+			<url-pattern>/_ah/queue/default</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>admin</role-name>
+		</auth-constraint>
+	</security-constraint>
+	<!-- /Queues -->
+
+	<!-- CRON -->
+	<servlet>
+		<servlet-name>cronService</servlet-name>
+		<servlet-class>org.gtugs.bsas.apidemo.CronServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>cronService</servlet-name>
+		<url-pattern>/cron/updateTime</url-pattern>
+	</servlet-mapping>
+	<security-constraint>
+		<web-resource-collection>
+			<url-pattern>/cron/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>admin</role-name>
+		</auth-constraint>
+	</security-constraint>
+	<!-- /CRON -->
+	<!-- CAPABILITIES -->
+	<servlet>
+		<servlet-name>serviceStatus</servlet-name>
+		<servlet-class>org.gtugs.bsas.apidemo.CapabilitiesServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>serviceStatus</servlet-name>
+		<url-pattern>/dashboard</url-pattern>
+	</servlet-mapping>
+	<!-- /CAPABILITIES -->
+	<!-- IMAGES -->
+	<servlet>
+		<servlet-name>imageService</servlet-name>
+		<servlet-class>org.gtugs.bsas.apidemo.ImageServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>imageService</servlet-name>
+		<url-pattern>/imageService</url-pattern>
+	</servlet-mapping>
+	<!-- /IMAGES -->
+	<!-- FETCH URL -->
+	<servlet>
+		<servlet-name>urlFetch</servlet-name>
+		<servlet-class>org.gtugs.bsas.apidemo.URLFetchServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>urlFetch</servlet-name>
+		<url-pattern>/fetchService</url-pattern>
+	</servlet-mapping>
+	<!-- /FETCH URL -->
+</web-app>

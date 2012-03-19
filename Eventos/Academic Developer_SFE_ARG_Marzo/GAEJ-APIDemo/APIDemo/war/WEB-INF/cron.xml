@@ -1,0 +1,16 @@
+<cronentries>
+	<!--
+ 	<cron>
+		<url>/cron/cleanDB</url>
+		<description>Limpia registros viejos de la BD.</description>
+		<schedule>every day 23:59</schedule>
+		<timezone>America/Argentina/Buenos_Aires</timezone>
+	</cron>
+	 -->
+	<cron>
+		<url>/cron/updateTime</url>
+		<description>Registra la hora en el log!</description>
+		<schedule>every 10 minutes</schedule>
+		<timezone>America/Argentina/Buenos_Aires</timezone>
+	</cron>
+</cronentries>
