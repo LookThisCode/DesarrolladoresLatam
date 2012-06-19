@@ -1,0 +1,36 @@
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title></title>
+    <script>
+        html5redtask.indexedDB.getTaskItems = function() {
+        var todos = document.getElementById("taskItems");
+          todos.innerHTML = "";
+
+          var db = html5redtask.indexedDB.db;
+          var trans = db.transaction(["task"], IDBTransaction.READ_WRITE, 0);
+          var store = trans.objectStore("task");
+
+      
+          var keyRange = IDBKeyRange.lowerBound(0);
+          var cursorRequest = store.openCursor(keyRange);
+
+      cursorRequest.onsuccess = function(e) {
+        var result = e.target.result;
+        if(!!result == false)
+            return;
+
+        renderTask(result.value);
+        result.continue();
+  };
+
+  cursorRequest.onerror = html5redtask.indexedDB.onerror;
+};  
+                        
+    </script>
+    
+    
+  </head>
+  <body>
+  </body>
+</html>

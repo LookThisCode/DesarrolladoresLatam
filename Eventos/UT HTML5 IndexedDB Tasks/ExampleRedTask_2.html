@@ -1,0 +1,38 @@
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title></title>
+    <script>
+    
+    
+      html5redtask.indexedDB.open = function() {
+          var request = indexedDB.open("Redtask","Nuestras tareas en rojo como el día laboral");
+        
+          request.onsuccess = function(e) 
+          {
+            var v = "1.0";
+            html5redtask.indexedDB.db = e.target.result;
+            var db = html5redtask.indexedDB.db;
+            
+                if(v!= db.version) {
+                  var setVrequest = db.setVersion(v);
+
+      
+              setVrequest.onfailure = html5redtask.indexedDB.onerror;
+              setVrequest.onsuccess = function(e) {
+              var store = db.createObjectStore("task",{keyPath: "timeStamp"});
+
+              html5redtask.indexedDB.getTaskItems();
+          };
+        }
+        html5redtask.indexedDB.getTaskItems();
+  };
+
+  request.onfailure = html5redtask.indexedDB.onerror;
+}
+    
+      </script>
+  </head>
+  <body>
+  </body>
+</html>

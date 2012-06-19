@@ -1,0 +1,25 @@
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title></title>
+    <script>
+      html5redtask.indexedDB.deleteTask = function(id) {
+          var db = html5redtask.indexedDB.db;
+          var trans = db.transaction(["task"], IDBTransaction.READ_WRITE, 0);
+          var store = trans.objectStore("task");
+
+          var request = store.delete(id);
+
+          request.onsuccess = function(e) {
+          html5redtask.indexedDB.getTaskItems();  
+  };
+
+  request.onerror = function(e) {
+    console.log(e);
+  };
+};
+      </script>
+  </head>
+  <body>
+  </body>
+</html>

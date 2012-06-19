@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <style type="text/css">
+body {
+            color: #222;
+            font: 14px Arial;
+          }
+      
+      body a {
+            color: #3D5C9D;
+            text-decoration: none;
+      }  </style>
+<script>
+  
+  
+      var html5redtask = {};
+      var indexedDB = window.indexedDB || window.webkitIndexedDB ||
+                      window.mozIndexedDB;
+      
+      if ('webkitIndexedDB' in window) {
+        window.IDBTransaction = window.webkitIDBTransaction;
+        window.IDBKeyRange = window.webkitIDBKeyRange;
+      }
+      
+      html5redtask.indexedDB = {};
+      html5redtask.indexedDB.db = null;
+      
+      //si la operación genera algun error.
+      html5redtask.indexedDB.onerror = function(e) {
+        console.log(e);
+      };
+      
+      html5redtask.indexedDB.open = function() {
+        var request = indexedDB.open("Redtask","Nuestras tareas en rojo como el día laboral");
+      
+        //Si la operación para abrir es correcta.
+        request.onsuccess = function(e) {
+          var v = "1.99";
+          html5redtask.indexedDB.db = e.target.result;
+          var db = html5redtask.indexedDB.db;
+          
+          if (v!= db.version) {
+            var setVrequest = db.setVersion(v);
+      
+            setVrequest.onerror = html5redtask.indexedDB.onerror;
+            
+            setVrequest.onsuccess = function(e) 
+              {
+                  if(db.objectStoreNames.contains("task")) 
+                  {
+                    db.deleteObjectStore("task");
+                  }
+      
+              var store = db.createObjectStore("task",
+                {keyPath: "timeStamp"});
+      
+              html5redtask.indexedDB.getTaskItems();
+            };
+          }
+          else {
+            html5redtask.indexedDB.getTaskItems();
+          }
+        };
+      
+        request.onerror = html5redtask.indexedDB.onerror;
+      }
+      
+      // Agregar una tarea
+      html5redtask.indexedDB.addTask = function(todoText) {
+        var db = html5redtask.indexedDB.db;
+        var trans = db.transaction(["task"], IDBTransaction.READ_WRITE);
+        var store = trans.objectStore("task");
+        var data;
+      
+        if (todoText == "Nicolas") {
+         data = {
+          "text": "error",
+          "timeStamp": new Date().getTime()
+            }; 
+        }
+        else
+        {
+        
+            data = {
+              "text": todoText,
+              "timeStamp": new Date().getTime()
+            };
+          }
+      
+        var request = store.put(data);
+      
+        //Si todo salió bien
+        request.onsuccess = function(e) {
+          html5redtask.indexedDB.getTaskItems();
+        };
+      
+        //Si ocurrieron errores
+        request.onerror = function(e) {
+          console.log("Error: ", e);
+        };
+        
+      
+      };
+      
+  //Para Borrar una tarea 
+      html5redtask.indexedDB.deleteTask = function(id) {
+        var db = html5redtask.indexedDB.db;
+        var trans = db.transaction(["task"], IDBTransaction.READ_WRITE);
+        var store = trans.objectStore("task");
+      
+        var request = store.delete(id);
+      
+        //La operación de borrado es correcta
+        request.onsuccess = function(e) {
+          html5redtask.indexedDB.getTaskItems();
+        };
+      
+        //La operación de borrado o eliminación no es correcta
+        request.onerror = function(e) {
+          console.log("Error: ", e);
+        };
+      };
+      
+      //devolver todos los items de las tareas.
+      html5redtask.indexedDB.getTaskItems = function() {
+        var todos = document.getElementById("taskItems");
+        todos.innerHTML = "";
+      
+        var db = html5redtask.indexedDB.db;
+        var trans = db.transaction(["task"], IDBTransaction.READ_WRITE);
+        var store = trans.objectStore("task");
+      
+        var keyRange = IDBKeyRange.lowerBound(0);
+        var cursorRequest = store.openCursor(keyRange);
+      
+        //Si la operación es correcta
+        cursorRequest.onsuccess = function(e) {
+          var result = e.target.result;
+          if(!!result == false)
+            return;
+      
+          renderTask(result.value);
+          result.continue();
+        };
+      
+        //Si ocurren errores.
+        cursorRequest.onerror = html5redtask.indexedDB.onerror;
+      };
+      
+      //Función encanrgada del render de la tarea.                    
+      function renderTask(row) {
+        var todos = document.getElementById("taskItems");
+        var li = document.createElement("li");
+        var a = document.createElement("a");
+        var t = document.createTextNode(row.text);
+      
+        //listener para el evento del botón.
+        a.addEventListener("click", function() {
+          html5redtask.indexedDB.deleteTask(row.timeStamp);
+        }, false);
+      
+        a.textContent = " [Borrar]";
+        li.appendChild(t);
+        li.appendChild(a);
+        todos.appendChild(li)
+      }
+      
+      //Función para agregar una tarea.
+      function addTask() {
+        var todo = document.getElementById("task");
+        html5redtask.indexedDB.addTask(todo.value);
+        todo.value = "";
+      }
+      
+      //Función inicial.
+      function init() {
+        html5redtask.indexedDB.open();
+      }
+      
+      window.addEventListener("DOMContentLoaded", init, false);
+    </script> </head>
+ <body>
+  <ul id="taskItems">
+  </ul>
+  <br />
+  <input id="task" name="task" placeholder="Que necesita agregar?" style="width: 200px;" type="text" /> <input onclick="addTask(); return false;" type="submit" value="Agregar Tarea" /><br />
+  <br />
+  <img alt="" src="http://i196.photobucket.com/albums/aa17/nbortolotti/html5-64.png" /></body>
+</html>
