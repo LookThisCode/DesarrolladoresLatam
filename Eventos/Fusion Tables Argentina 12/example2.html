@@ -1,0 +1,369 @@
+<html>
+ <head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+  <title>Example 2</title>
+  <style type="text/css">
+    body { font-family: Arial, sans-serif; }
+  #map_canvas { width: 750px; height: 450px; }  
+  </style>
+    
+   <!-- Import the visualization javascript -->   
+   <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+   <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+   
+   <script id="script" type="text/javascript">
+
+    google.load('visualization', '1', {'packages':['corechart']});
+
+    var map, layer;
+
+    var tableid = 4618756;
+    var location_column = 'geometry';
+    var layer_styles = {
+    'Comunidad': {
+    'min': 0,
+    'max': 500,
+    'colors': [
+      '#f4cccc',
+      '#ea9999',
+      '#e06666',
+      '#cc0000',
+      '#990000'
+      ]
+    },
+    'Academico': {
+    'min': 0,
+    'max': 100,
+    'colors': [
+      '#d0e0e3',
+      '#a2c4c9',
+      '#76a5af',
+      '#45818e',
+      '#134f5c'
+      ]
+     },
+    'Extra': {
+    'min': 0,
+    'max': 200,
+    'colors': [
+      '#d0e0e3',
+      '#a2c4c9',
+      '#76a5af',
+      '#45818e',
+      '#134f5c'
+      ]
+     },
+     'Total': {
+     'min': 0,
+     'max': 200,
+     'colors': [
+      '#d9d2e9',
+      '#b4a7d6',
+      '#8e7cc3',
+      '#674ea7',
+      '#351c75'
+      ]
+    }
+   }
+  
+    var sector = 'Comunidad';
+   
+   function initialize() {
+      // Initialize map
+      map = new google.maps.Map(document.getElementById('map_canvas'), {
+      center: new google.maps.LatLng(-34.161818, -60.915528),
+      zoom: 3,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      zoomControlOptions: {
+      style: google.maps.ZoomControlStyle.SMALL
+      },
+      });
+
+      // Inicializar Capa de Fusion
+      layer = new google.maps.FusionTablesLayer({
+      query: {
+      select: location_column,
+      from: tableid,
+      where: "Sector = '" + sector + "'"       
+      }
+      });
+  
+     layer.setMap(map);
+     
+      // Leyenda
+      createLegend('Comunidad');
+     
+     // Estilo Dinamico
+     styleLayer();
+     
+      // Estilo de Mapa
+      styleMap();
+     
+  
+     // Google Chart Tools
+     document.getElementById('map_canvas').style.width = '350px';
+     drawVisualization('Argentina');
+
+  
+     // Click listener - update graph
+     google.maps.event.addListener(layer, 'click', function(e) {
+     drawVisualization(e.row['Pais'].value);
+
+    
+     // Click listener - update info window contents
+     informacionVentanaPersonalizada(e);
+  
+     });
+     
+   }
+  
+// Styles Dinamico
+function styleLayer() {
+  var defined_styles = layer_styles[sector];
+  var colors = defined_styles.colors;
+  var min_num = defined_styles.min;
+  var max_num = defined_styles.max;
+  var step = (max_num - min_num) * 1.0 / colors.length;
+
+  var styles = new Array();
+  for(i in colors) {
+    styles.push({
+      where: generateWhere(min_num, max_num, i, step),
+      polygonOptions: {
+        fillColor: colors[i]
+      }
+    });
+  }
+
+  layer.setOptions({
+    query: {
+      select: location_column,
+      from: tableid,
+      where: "Sector = '" + sector + "'"
+    }
+  });
+  layer.set('styles', styles);
+}
+
+// Crear la clausula where 
+function generateWhere(min_num, max_num, i, step) {
+  var step = step * i;
+  var new_min = min_num + step;
+  var whereClause = new Array();
+  whereClause.push("Sector = '");
+  whereClause.push(sector);
+  whereClause.push("' AND '2012' > ");
+  whereClause.push(new_min);
+  return whereClause.join('');
+}
+
+// Leyenda (Legend)
+function createLegend(type) {
+  var legendDiv = document.createElement('div');
+  var legend = new Legend(legendDiv, type);
+  legendDiv.index = 1;
+  map.controls[google.maps.ControlPosition.LEFT_BOTTOM].pop();
+  map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(legendDiv);
+}
+  
+// Generar el contenido de la leyenda (Generate the content for the legend)
+function Legend(controlDiv, type) {
+  controlDiv.style.padding = '10px';
+  var controlUI = document.createElement('div');
+  controlUI.style.backgroundColor = 'white';
+  controlUI.style.borderStyle = 'solid';
+  controlUI.style.borderWidth = '1px';
+  controlUI.style.padding = '5px';
+  controlUI.style.width = '120px';
+  controlUI.style.height = '140px';
+  controlUI.title = 'Legend';
+  controlDiv.appendChild(controlUI);
+  var controlText = document.createElement('div');
+  legendContent(controlText, type);
+  controlUI.appendChild(controlText);
+}
+
+function legendContent(controlText, type) {
+  controlText.style.fontFamily = 'Arial,sans-serif';
+  controlText.style.fontSize = '14px';
+  controlText.style.padding = '4px';
+
+  var header = document.createElement('p');
+  header.style.margin = '0px 0px 5px 0px';
+  header.style.fontWeight = 'bold';
+  header.innerHTML = type + ' Actividades';
+  controlText.appendChild(header);
+
+  var defined_styles = layer_styles[type];
+  var colors = defined_styles.colors;
+  var min_num = defined_styles.min;
+  var max_num = defined_styles.max;
+  var step = (max_num - min_num) * 1.0 / colors.length;
+  for (var j = 0; j < colors.length; j++) {
+    var colorBlock = document.createElement('div');
+    colorBlock.style.height = '15px';
+    colorBlock.style.width = '10px';
+    colorBlock.style.margin = '0px 3px 0px 0px';
+    colorBlock.style.cssFloat = 'left';
+    colorBlock.style.styleFloat = 'left';
+    colorBlock.style.clear = 'both';
+    colorBlock.style.background = colors[j];
+    controlText.appendChild(colorBlock);
+
+    var textBlock = document.createElement('p');
+    textBlock.style.margin = '0px';
+    textBlock.style.cssFloat = 'left';
+    textBlock.style.styleFloat = 'left';
+    textBlock.style.display = 'inline';
+    var lower = step * j;
+    var upper = step * (j + 1);
+    if (j == colors.length - 1) {
+      textBlock.innerHTML = lower + '+';
+    } else {
+      textBlock.innerHTML = lower + ' - ' + upper;
+    }
+    controlText.appendChild(textBlock);
+  }
+}
+  
+// Estilo del mapa (Styled Map)
+function styleMap() {
+  var style = [{
+    featureType: 'all',
+    elementType: 'all',
+    stylers: [
+      { saturation: -99 }
+    ]
+  } ,
+  {
+    featureType: 'road.arterial',
+    elementType: 'all',
+    stylers: [
+      { visibility: 'off' }
+    ]
+  } ,
+  {
+    featureType: 'road.local',
+    elementType: 'all',
+    stylers: [
+      { visibility: 'off' }
+    ]
+  } ,
+  {
+    featureType: 'administrative.country',
+    elementType: 'all',
+    stylers: [
+      { visibility: 'off' }
+    ]
+  } ,
+  {
+    featureType: 'administrative.locality',
+    elementType: 'all',
+    stylers: [
+      { visibility: 'off' }
+    ]
+  } ,
+  {
+    featureType: 'administrative.neighborhood',
+    elementType: 'all',
+    stylers: [
+      { visibility: 'off' }
+    ]
+  } ,
+  {
+    featureType: 'administrative.land_parcel',
+    elementType: 'all',
+    stylers: [
+      { visibility: 'off' }
+    ]
+  } ,
+  {
+    featureType: 'transit',
+    elementType: 'all',
+    stylers: [
+      { visibility: 'off' }
+    ]
+  }];
+
+  var styledMapType = new google.maps.StyledMapType(style, {
+    map: map,
+    name: 'Styled Map'
+  });
+  map.mapTypes.set('map-style', styledMapType);
+  map.setMapTypeId('map-style');
+}
+  
+  
+  function drawVisualization(pais) {
+      google.visualization.drawChart({
+        "containerId": "visualization",
+        "dataSourceUrl": "http://www.google.com/fusiontables/gvizdata?tq=",
+        "query": "SELECT Sector,'2011','2012' FROM 4618756 WHERE Pais = '" + pais + "'",
+        "chartType": "BarChart",
+        "options": {
+        "title": pais,
+        "height": 400,
+        "width": 400
+       }
+       });
+       }
+       
+       // Ventana de Informacion Personalizada (Custom info windows)
+       function informacionVentanaPersonalizada(event) {
+       var actividades = event.row['2012'].value;
+       if (actividades > 300) {
+        event.infoWindowHtml = '<p style="color: red; font-weight: bold;">Excelente!</p>';
+          } else if (actividades > 100) {
+        event.infoWindowHtml = '<p style="color: orange; font-weight: bold;">Intermedio</p>';
+          } else {
+        event.infoWindowHtml = '<p style="color: green; font-weight: bold;">Bajo</p>';
+        }
+        }
+   
+       //Cambiar la consulta de la capa para las opciones de país
+  function changeMap(pais) {
+       if (pais == "") {
+       layer.setOptions({
+          query: {
+            select: location_column,
+            from: tableid,
+            where: "Sector = '" + sector + "'"
+          }
+        }); 
+        return;
+        }
+
+
+        layer.setOptions({
+        query: {
+        select: location_column,
+        from: tableid,
+        where: "Sector = '" + sector + "' AND 'Pais' = '" + pais + "'"
+        }
+        });
+
+        drawVisualization(pais);
+  
+        }  
+
+</script> 
+</head>
+ <body onload="initialize()">
+   <label>Pais</label><select id="searchString" onchange="changeMap(this.value);"><option value="Argentina">Argentina</option><option value="Uruguay">Uruguay</option></select> <!--Creación de la tabla que aloja el mapa y el gráfico-->
+  <table>
+   <tbody>
+    <tr>
+     <td>
+      <div id="map_canvas">
+       &nbsp;</div>
+     </td>
+     <td>
+      <div id="visualization">
+       &nbsp;</div>
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <br />
+ </body>
+</html>
