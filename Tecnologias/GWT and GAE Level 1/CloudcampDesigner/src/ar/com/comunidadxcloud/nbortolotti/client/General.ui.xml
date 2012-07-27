@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder' xmlns:g='urn:import:com.google.gwt.user.client.ui' xmlns:app='ar.com.comunidadxcloud.nbortolotti.client'>
+	<ui:style>
+		.panel {
+			background-color: ivory;
+		}
+	</ui:style>
+
+	<g:FlowPanel styleName="{style.panel}">
+		<g:DockLayoutPanel unit="EM" width="185px" height="241px">
+			
+		</g:DockLayoutPanel>
+	</g:FlowPanel>
+</ui:UiBinder>
