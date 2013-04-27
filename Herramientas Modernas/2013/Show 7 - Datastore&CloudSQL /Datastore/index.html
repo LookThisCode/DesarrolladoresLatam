@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+
+  <script language="javascript" src='script/jquery-1.6.min.js'></script>
+  <script language="javascript" src='script/ajax.util.js'></script>
+  
+</head>
+<body>
+    
+   
+  <!-- content -->  
+  <div id="gc-pagecontent" >
+  <h1 class="page_title">Persistencia Basica</h1>
+  
+ <!-- tabs --> 
+ <div id="tabs" class="gtb">
+      <a id="home" href="#home" class="tab">Home</a>	   
+	  <a id="producto" href="#producto" class="tab">Producto</a> 		   
+	
+  </div>
+  
+   <!-- Operaciones del Producto  -->
+  <div class="g-unit" id="producto-tab">
+    <div class ="message" id="producto-show-message" style="display:none">
+  </div>
+
+   <!-- search container -->
+   	<div class="gsc-search-box" id="producto-search-ctr">
+   	<!-- section title -->
+   	<h2>Todos los productos</h2>
+   	<form name="producto-search-form" id="producto-search-form">
+	   	 <label>Nombre</label>
+	   	 <input type="text" name="q" id="q" class="gsc-input"> 
+	     <input type="button" value="Buscar" onclick="search('producto')">
+	     <input type="button" value="Agregar" onclick="add('producto')">
+	     <input type="reset" id="producto-search-reset" class="cancel" title="Reset" value="Reset" style="visibility: hidden">
+    </form>
+   	</div>
+   <!-- list container -->
+   	<div class="results" style="border:0;" id="producto-list-ctr">
+          <table width="100%" cellspacing="0" cellpadding="2" border="0" style="border-collapse:collapse;">
+            <thead>
+              <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Descripcion</th>
+                <th scope="col">Action</th>                      
+              </tr>
+            </thead>
+            <tbody id="producto-list-tbody"></tbody>
+          </table>
+  	</div>
+  
+  	<!-- create container -->
+	  	<div class="create-ctr" id="producto-create-ctr">
+	  	<h2>Crear Producto</h2>
+	  	<form name="producto-create-form" id="producto-create-form">
+	  	<table width="200" cellspacing="0" cellpadding="0">
+	  	<tbody>
+	  	<tr>
+		 <td>Nombre </td>
+          <td><span class="readonly"><input type="text" style="width: 185px;" autocomplete="off" class="gsc-input" maxlength="2048" name="nombre" id="nombre"></span></td>
+		 </tr>
+		<tr>
+           <td>Descripcion</td>
+           <td><input type="text" style="width: 185px;" autocomplete="off" class="gsc-input" maxlength="2048" name="descripcion" id="descripcion"></td>
+         </tr>
+        <tr>
+          <td>&nbsp;</td>
+          <td> 
+          <input type="button" class="save" title="Guardar" value="Guardar" onclick="formValidate('producto')">
+          <input type="button" class="cancel" title="Cancelar" value="Cancelar" onclick="cancel('producto')">
+          <input type="reset" id="producto-reset" class="cancel" title="Reset" value="Reset" style="visibility: hidden">
+         </td>
+        </tr>
+	  	</tbody>
+  </table>
+  </form>
+  </div>
+ </div>
+  
+<script type="text/javascript">
+
+ $(window).load(function () {
+   init();
+});
+
+</script>
+</body>
+</html>
