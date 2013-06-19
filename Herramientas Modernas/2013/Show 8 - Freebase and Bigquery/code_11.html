@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+</head>
+<body>
+<script>
+  var API_KEY = 'AIzaSyCv-k8Y3v8ZeMhNkNj2MB9jALX8M6_S3_s';
+  var service_url = 'https://www.googleapis.com/freebase/v1/mqlread';
+  var band = "The Rolling Stones";
+  var query = {                         
+    type: "/music/artist",        
+    name: band,                   
+    album: [{                     
+    name:null,                
+    release_date: null,        
+    sort: "release_date",     
+    "release_type!=":"single"  
+    }]
+  };
+  var params = {
+    'key': API_KEY,
+    'query': JSON.stringify(query)
+  };
+  $.getJSON(service_url + '?callback=?', params, function(response) {
+    $.each(response.result.album, function(i, album) {
+      $('<div>', {text:album['name']}).appendTo(document.body);
+    });
+  });
+</script>
+</body>
+</html>

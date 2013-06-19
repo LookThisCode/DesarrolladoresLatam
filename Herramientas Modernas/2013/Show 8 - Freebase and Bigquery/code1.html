@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+  </head>
+  <body>
+    <script>
+      var topic_id = '/en/san_francisco';
+      var service_url = 'https://www.googleapis.com/freebase/v1/topic';
+      var params = {};
+      $.getJSON(service_url + topic_id + '?callback=?', params, function(topic) {
+        $('<div>',{text:topic.property['/type/object/name'].values[0].text}).appendTo(document.body);
+      });
+    </script>
+  </body>
+</html>
